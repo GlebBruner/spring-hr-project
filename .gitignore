@@ -8,6 +8,7 @@ target/
 */target/**
 .classpath
 .project
+*.iml
 .settings/
 
 # Sensitive or high-churn files:
