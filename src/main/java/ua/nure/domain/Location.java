@@ -1,4 +1,4 @@
-package domain;
+package ua.nure.domain;
 
 
 import javax.persistence.*;

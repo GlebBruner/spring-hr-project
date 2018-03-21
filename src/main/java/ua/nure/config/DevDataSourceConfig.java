@@ -1,4 +1,4 @@
-package config;
+package ua.nure.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -7,8 +7,8 @@ import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 
-@Configuration
-@PropertySource("classpath:application-dev.properties")
+//@Configuration
+//@PropertySource("classpath:application-dev.properties")
 public class DevDataSourceConfig implements DataSourceConfig {
 
     @Autowired

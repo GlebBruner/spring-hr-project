@@ -1,4 +1,4 @@
-package config;
+package ua.nure.config;
 
 import javax.sql.DataSource;
 
