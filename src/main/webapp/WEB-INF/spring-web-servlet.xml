@@ -12,6 +12,51 @@
 
     <context:component-scan base-package="ua.nure" />
 
-    <mvc:annotation-driven />
+    <beans profile="dev">
+
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="location" value="classpath:application-dev.properties"/>
+        </bean>
+
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" autowire="byType">
+            <property name="driverClassName" value="${jdbc.DriverClassName}"/>
+            <property name="url" value="${jdbc.url}"/>
+            <property name="username" value="${jdbc.user}"/>
+            <property name="password" value="${jdbc.password}"/>
+        </bean>
+
+    </beans>
+
+    <beans profile="prod">
+
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="location" value="classpath:application-prod.properties"/>
+        </bean>
+
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" autowire="byType">
+            <property name="driverClassName" value="${jdbc.DriverClassName}"/>
+            <property name="url" value="${jdbc.url}"/>
+            <property name="username" value="${jdbc.user}"/>
+            <property name="password" value="${jdbc.password}"/>
+        </bean>
+
+
+    </beans>
+
+    <beans>
+        <bean id="countryRepository" class="ua.nure.repository.CountryRepository" autowire="byType"></bean>
+        <bean id="countryService" class="ua.nure.service.CountryService" autowire="byType"></bean>
+        <bean id="countryResource" class="ua.nure.web.CountryResource" autowire="byType"></bean>
+        <mvc:annotation-driven />
+    </beans>
+
+    <!--<bean id = "textEditor" class = "com.tutorialspoint.TextEditor">-->
+        <!--<property name = "spellChecker" ref = "spellChecker"/>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; Definition for spellChecker bean &ndash;&gt;-->
+    <!--<bean id = "spellChecker" class = "com.tutorialspoint.SpellChecker"></bean>-->
+
+
 
 </beans>
