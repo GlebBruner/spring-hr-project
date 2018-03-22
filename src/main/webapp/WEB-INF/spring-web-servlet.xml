@@ -12,17 +12,25 @@
 
     <context:component-scan base-package="ua.nure" />
 
+    <bean id="countryRepository" class="ua.nure.repository.CountryRepository" autowire="byType" />
+    <bean id="countryService" class="ua.nure.service.CountryService" autowire="byType"/>
+    <bean id="countryResource" class="ua.nure.web.CountryResource" autowire="byType"/>
+    <mvc:annotation-driven />
     <beans profile="dev">
 
         <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
             <property name="location" value="classpath:application-dev.properties"/>
         </bean>
 
-        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" autowire="byType">
+        <bean id="dataSource1" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
             <property name="driverClassName" value="${jdbc.DriverClassName}"/>
             <property name="url" value="${jdbc.url}"/>
             <property name="username" value="${jdbc.user}"/>
             <property name="password" value="${jdbc.password}"/>
+        </bean>
+
+        <bean id="jdbcTemplate1" class="org.springframework.jdbc.core.JdbcTemplate">
+            <property name="dataSource" ref="dataSource1"/>
         </bean>
 
     </beans>
@@ -33,29 +41,20 @@
             <property name="location" value="classpath:application-prod.properties"/>
         </bean>
 
-        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" autowire="byType">
+        <bean id="dataSource2" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
             <property name="driverClassName" value="${jdbc.DriverClassName}"/>
             <property name="url" value="${jdbc.url}"/>
             <property name="username" value="${jdbc.user}"/>
             <property name="password" value="${jdbc.password}"/>
         </bean>
 
+        <bean id="jdbcTemplate2" class="org.springframework.jdbc.core.JdbcTemplate">
+            <property name="dataSource" ref="dataSource2"/>
+        </bean>
+
 
     </beans>
 
-    <beans>
-        <bean id="countryRepository" class="ua.nure.repository.CountryRepository" autowire="byType"></bean>
-        <bean id="countryService" class="ua.nure.service.CountryService" autowire="byType"></bean>
-        <bean id="countryResource" class="ua.nure.web.CountryResource" autowire="byType"></bean>
-        <mvc:annotation-driven />
-    </beans>
-
-    <!--<bean id = "textEditor" class = "com.tutorialspoint.TextEditor">-->
-        <!--<property name = "spellChecker" ref = "spellChecker"/>-->
-    <!--</bean>-->
-
-    <!--&lt;!&ndash; Definition for spellChecker bean &ndash;&gt;-->
-    <!--<bean id = "spellChecker" class = "com.tutorialspoint.SpellChecker"></bean>-->
 
 
 

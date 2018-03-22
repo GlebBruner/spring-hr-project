@@ -22,6 +22,13 @@ public class Country implements Serializable {
 
     @Column(name = "country_name")
     private String countryName;
+    
+    protected Country() {}
+
+    public Country(Long id, String countryName) {
+        this.id = id;
+        this.countryName = countryName;
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
