@@ -13,8 +13,18 @@
     <context:component-scan base-package="ua.nure" />
 
     <bean id="countryRepository" class="ua.nure.repository.CountryRepository" autowire="byType" />
+    <bean id="employeeRepository" class="ua.nure.repository.EmployeeRepository" autowire="byType"/>
+    <bean id="departmentRepository" class="ua.nure.repository.DepartmentRepository" autowire="byType"/>
+    <bean id="locationRepository" class="ua.nure.repository.LocationRepository" autowire="byType"/>
+    <bean id="taskRepository" class="ua.nure.repository.TaskRepository" autowire="byType"/>
+    <bean id="jobRepository" class="ua.nure.repository.JobRepository" autowire="byType"/>
+
     <bean id="countryService" class="ua.nure.service.CountryService" autowire="byType"/>
     <bean id="countryResource" class="ua.nure.web.CountryResource" autowire="byType"/>
+
+    <bean id="locationService" class="ua.nure.service.LocationService" autowire="byType"/>
+    <bean id="locationResource" class="ua.nure.web.LocationResource" autowire="byType"/>
+
     <mvc:annotation-driven />
     <beans profile="dev">
 
@@ -54,7 +64,6 @@
 
 
     </beans>
-
 
 
 

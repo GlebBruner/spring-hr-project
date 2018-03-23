@@ -1,0 +1,24 @@
+package ua.nure.service;
+
+import ua.nure.domain.Location;
+import ua.nure.repository.LocationRepository;
+
+import java.util.List;
+
+public class LocationService {
+
+    private LocationRepository locationRepository;
+
+    public void setLocationRepository(LocationRepository locationRepository) {
+        this.locationRepository = locationRepository;
+    }
+
+    public List<Location> findAll () {
+        return locationRepository.findAll();
+    }
+
+    public Location findOne (Integer id) {
+        return locationRepository.findOne(id);
+    }
+
+}
