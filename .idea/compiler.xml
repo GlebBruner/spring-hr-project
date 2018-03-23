@@ -10,7 +10,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="logic" target="1.8" />
       <module name="trkweb" target="1.8" />
     </bytecodeTargetLevel>
   </component>
