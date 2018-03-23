@@ -7,7 +7,6 @@ import ua.nure.domain.Location;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Struct;
 import java.util.List;
 
 public class LocationRepository implements CrudRepository<Location>{
@@ -30,7 +29,7 @@ public class LocationRepository implements CrudRepository<Location>{
     @Override
     public Location findOne(Integer id) {
         String selectLocation = "select l.id, l.city. l.postal_code, l.street_address, l.country_id, c.id, c.country_name " +
-                " from location l LEFT JOIN country c ON l.country_id = c.id" + " where id = ?";
+                " from location l LEFT JOIN country c ON l.country_id = c.id" + " where l.id = ?";
         return this.jdbcTemplate.queryForObject(selectLocation, new Object[]{id}, new LocationMapper());
     }
 
