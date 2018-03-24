@@ -39,21 +39,32 @@ public class CountryResource {
         Long id = this.countryService.create(country);
 
         return ResponseEntity.created(URI.create("/api/countries/" + id)).build();
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setLocation(builder.path("/countries/{country_id}").buildAndExpand(country.getId()).toUri());
-//        return new ResponseEntity<Void>(httpHeaders, HttpStatus.CREATED);
 
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/countries/{country_id}")
-    public ResponseEntity<Country> deleteCountry (@PathVariable Integer country_id) {
+    @DeleteMapping("/countries/{country_id}")
+    public ResponseEntity<Void> deleteCountry (@PathVariable Integer country_id) {
 
         if (this.countryService.isCountryExists(this.countryService.findOne(country_id))) {
-            return new ResponseEntity<Country>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         } else {
             this.countryService.delete(country_id);
-            return new ResponseEntity<Country>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.<Void>accepted().build();
         }
 
     }
+
+    @PutMapping("/countries/{country_id}")
+    public ResponseEntity<Void> updateCountry(@PathVariable Integer country_id, @RequestBody Country country) {
+
+        Country country1 = countryService.findOne(country_id);
+
+        if (country1 == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            this.countryService.update(country1);
+            return ResponseEntity.noContent().build();
+        }
+    }
+
 }

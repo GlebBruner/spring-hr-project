@@ -34,4 +34,9 @@ public class JobRepository implements CrudRepository<Job> {
     public void delete(Integer id) {
 
     }
+
+    @Override
+    public void update(Job job) {
+
+    }
 }

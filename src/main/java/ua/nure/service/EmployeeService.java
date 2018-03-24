@@ -29,6 +29,10 @@ public class EmployeeService {
         this.employeeRepository.delete(id);
     }
 
+    public void update (Employee employee) {
+        this.employeeRepository.update(employee);
+    }
+
     public boolean isEmployeeExists (Integer id) {
         return this.employeeRepository.findOne(id) != null;
     }

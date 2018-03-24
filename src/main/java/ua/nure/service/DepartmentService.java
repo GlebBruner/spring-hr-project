@@ -30,6 +30,10 @@ public class DepartmentService {
         this.departmentRepository.delete(id);
     }
 
+    public void update (Department department) {
+        this.departmentRepository.update(department);
+    }
+
     public boolean isDepartmentExists (Department department) {
         return this.departmentRepository.findOne(department.getId().intValue()) != null;
     }

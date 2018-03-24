@@ -42,17 +42,14 @@ public class DepartmentResource {
     @PostMapping("/departments")
     public ResponseEntity<Void> createDepartment (@PathVariable Department department, UriComponentsBuilder uriBuilder) {
         if (this.departmentService.isDepartmentExists(department)) {
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
             Long id = this.departmentService.create(department);
             return ResponseEntity.created(URI.create("/api/departments/" + id)).build();
-//            HttpHeaders httpHeaders = new HttpHeaders();
-//            httpHeaders.setLocation(uriBuilder.path("/departments/{department_id}").buildAndExpand(department.getId()).toUri());
-//            return new ResponseEntity<Void>(httpHeaders, HttpStatus.CREATED);
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/departments/{department_id}")
+    @DeleteMapping(value = "/departments/{department_id}")
     public ResponseEntity<Department> deleteDepartment (@PathVariable Integer department_id) {
         if (this.departmentService.findOne(department_id) == null) {
             return new ResponseEntity<Department>(HttpStatus.NOT_FOUND);
@@ -74,5 +71,19 @@ public class DepartmentResource {
                 return ResponseEntity.ok(new ArrayList<>(departmentsEmployees));
             }
         }
+    }
+
+    @PutMapping("/departments/{department_id}")
+    public ResponseEntity<Void> updateDepartment (@RequestBody Department department, @PathVariable Integer department_id) {
+
+        Department updatedDepartment = this.departmentService.findOne(department_id);
+
+        if (updatedDepartment == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            this.departmentService.update(department);
+            return ResponseEntity.noContent().build();
+        }
+
     }
 }

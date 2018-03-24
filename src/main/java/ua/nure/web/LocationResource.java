@@ -22,8 +22,8 @@ public class LocationResource {
         this.locationService = locationService;
     }
 
-    @RequestMapping("/locations")
-    public ResponseEntity<List<Location>> getAllLocations () {
+    @GetMapping("/locations")
+    public ResponseEntity<List<Location>> getAllLocations() {
         return ResponseEntity.ok(this.locationService.findAll());
     }
 
@@ -33,21 +33,16 @@ public class LocationResource {
     }
 
     @PostMapping("/locations")
-    public ResponseEntity<Void> createLocation(@PathVariable Location location, UriComponentsBuilder componentsBuilder) {
+    public ResponseEntity<Void> createLocation(@RequestBody Location location) {
 
         if (this.locationService.isLocationExists(location)) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-        } else {
-            Long id = this.locationService.create(location);
-            return ResponseEntity.created(URI.create("/api/locations/" + id)).build();
-//            HttpHeaders httpHeaders = new HttpHeaders();
-//            httpHeaders.setLocation(componentsBuilder.path("/location/{location_id}").buildAndExpand(location.getId()).toUri());
-//            return new ResponseEntity<Void>(httpHeaders, HttpStatus.CREATED);
         }
-
+        Long id = this.locationService.create(location);
+        return ResponseEntity.created(URI.create("/api/locations/" + id)).build();
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/locations/{location_id}")
+    @DeleteMapping("/locations/{location_id}")
     public ResponseEntity<Location> deleteLocation(@PathVariable Integer location_id) {
         if (this.locationService.isLocationExists(this.locationService.findOne(location_id))) {
             return new ResponseEntity<Location>(HttpStatus.NOT_FOUND);
@@ -57,4 +52,17 @@ public class LocationResource {
         }
     }
 
+    @PutMapping("/locations/{location_id}")
+    public ResponseEntity<Void> updateLocation (@RequestBody Location location, @PathVariable Integer location_id) {
+
+        Location updatedLocation = this.locationService.findOne(location_id);
+
+        if (updatedLocation == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            this.locationService.update(location);
+            return ResponseEntity.noContent().build();
+        }
+
+    }
 }

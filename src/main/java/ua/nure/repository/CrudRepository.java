@@ -11,4 +11,6 @@ public interface CrudRepository<T> {
     List<T> findAll();
 
     void delete(Integer id);
+
+    void update (T t);
 }

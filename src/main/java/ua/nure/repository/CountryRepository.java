@@ -50,5 +50,9 @@ public class CountryRepository implements CrudRepository<Country> {
         jdbcTemplate.update("delete from country where id = ?", id);
     }
 
-
+    @Override
+    public void update(Country country) {
+        String updateLocation = "update country set country_name = ? where id = ?";
+        this.jdbcTemplate.update(updateLocation, country.getCountryName(), country.getId());
+    }
 }

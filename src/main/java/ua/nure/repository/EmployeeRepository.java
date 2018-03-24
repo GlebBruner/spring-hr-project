@@ -31,11 +31,6 @@ public class EmployeeRepository implements CrudRepository<Employee> {
 
     @Override
     public Long save(Employee employee) {
-//        String insertEmployee = "insert into " + TABLE_NAME + "(email, first_name, hire_date, last_name, phone_number, " +
-//                "salary, department_id, manager_id) VALUES(?,?,?,?,?,?,?,?)";
-//        this.jdbcTemplate.update(insertEmployee, employee.getEmail(), employee.getFirstName(), employee.getHireDate(),
-//                employee.getLastName(), employee.getPhoneNumber(), employee.getSalary(), employee.getDepartment().getId(), employee.getManager().getId());
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> {
@@ -144,4 +139,11 @@ public class EmployeeRepository implements CrudRepository<Employee> {
         }));
     }
 
+    @Override
+    public void update(Employee employee) {
+        String updateEmployee = "update " + TABLE_NAME + " set email = ?, first_name = ?, hire_date = ?, " +
+                " last_name = ?, phone_number = ?, salary = ?, department_id = ?, manager_id = ? where id = ?";
+        this.jdbcTemplate.update(updateEmployee, employee.getEmail(), employee.getFirstName(), employee.getHireDate(), employee.getLastName(),
+                employee.getPhoneNumber(), employee.getSalary(), employee.getDepartment().getId(), employee.getManager().getId());
+    }
 }

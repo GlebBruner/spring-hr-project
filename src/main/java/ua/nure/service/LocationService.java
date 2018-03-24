@@ -29,8 +29,13 @@ public class LocationService {
         this.locationRepository.delete(id);
     }
 
+    public void update(Location location) {
+        this.locationRepository.update(location);
+    }
+
     public boolean isLocationExists(Location location) {
-        return this.locationRepository.findOne(location.getId().intValue()) != null;
+//        return this.locationRepository.findOne(location.getId().intValue()) != null;
+        return false;
     }
 
 }

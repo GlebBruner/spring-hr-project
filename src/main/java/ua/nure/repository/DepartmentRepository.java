@@ -28,8 +28,6 @@ public class DepartmentRepository implements CrudRepository<Department> {
 
     @Override
     public Long save(Department department) {
-//        String insertDepartment = "insert into " + TABLE_NAME + " (id, department_name, location_id) values (?, ?, ?)";
-//        this.jdbcTemplate.update(insertDepartment, department.getId(), department.getDepartmentName(), department.getLocation().getId());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> {
@@ -127,29 +125,9 @@ public class DepartmentRepository implements CrudRepository<Department> {
         }));
     }
 
-    //commented cause i couldn't use non-static method within nested(also static) class
-
-    /*private static final class DepartmentMapper implements RowMapper<Department> { //
-        @Override
-        public Department mapRow(ResultSet resultSet, int i) throws SQLException {
-            Department department = new Department();
-            department.setId(resultSet.getLong("d.id"));
-            department.setDepartmentName(resultSet.getString("d.department_name"));
-
-            if (resultSet.getLong("d.location_id") != 0) {
-                Location locationForThisDepartment = new Location();
-                locationForThisDepartment.setId(resultSet.getLong("l.id"));
-                locationForThisDepartment.setCity(resultSet.getString("l.city"));
-                locationForThisDepartment.setPostalCode(resultSet.getString("l.postal_code"));
-                locationForThisDepartment.setStreetAddress(resultSet.getString("l.street_address"));
-                department.setLocation(locationForThisDepartment);
-            }
-
-            department.setEmployees(findAllEmployeesInDepartment());
-
-            return department;
-        }
-    }*/
-
-
+    @Override
+    public void update(Department department) {
+        String updateDepartment = "update " + TABLE_NAME + " set department_name = ?, location_id = ? where id = ?";
+        this.jdbcTemplate.update(updateDepartment, department.getDepartmentName(), department.getLocation().getId(), department.getId());
+    }
 }

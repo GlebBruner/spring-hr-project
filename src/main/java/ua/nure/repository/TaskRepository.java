@@ -56,4 +56,9 @@ public class TaskRepository implements CrudRepository<Task>{
         }
     }
 
+    @Override
+    public void update(Task task) {
+        String updateTask = "update " + TABLE_NAME + " set description = ?, title = ? where id = ?";
+        this.jdbcTemplate.update(updateTask, task.getDescription(), task.getTitle(), task.getId());
+    }
 }
