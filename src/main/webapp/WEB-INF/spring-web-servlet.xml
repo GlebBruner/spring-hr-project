@@ -25,6 +25,12 @@
     <bean id="locationService" class="ua.nure.service.LocationService" autowire="byType"/>
     <bean id="locationResource" class="ua.nure.web.LocationResource" autowire="byType"/>
 
+    <bean id="departmentService" class="ua.nure.service.DepartmentService" autowire="byType"/>
+    <bean id="departmentResource" class="ua.nure.web.DepartmentResource" autowire="byType"/>
+
+    <bean id="employeeService" class="ua.nure.service.EmployeeService" autowire="byType"/>
+    <bean id="employeeResource" class="ua.nure.web.EmployeeResource" autowire="byType"/>
+
     <mvc:annotation-driven />
     <beans profile="dev">
 

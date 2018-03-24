@@ -1,8 +1,11 @@
 package ua.nure.web;
 
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 import ua.nure.domain.Location;
 import ua.nure.service.LocationService;
 
@@ -23,8 +26,33 @@ public class LocationResource {
         return ResponseEntity.ok(this.locationService.findAll());
     }
 
-    @RequestMapping(method = RequestMethod.GET , value = "/location/{location_id}")
-    public Location getLocation(@PathVariable Integer location_id) {
-        return this.locationService.findOne(location_id);
+    @GetMapping("/location/{location_id}")
+    public ResponseEntity<Location> getLocation(@PathVariable Integer location_id) {
+        return ResponseEntity.ok(this.locationService.findOne(location_id));
     }
+
+    @PostMapping("/location")
+    public ResponseEntity<Void> createLocation(@PathVariable Location location, UriComponentsBuilder componentsBuilder) {
+
+        if (this.locationService.isLocationExists(location)) {
+            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        } else {
+            this.locationService.create(location);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(componentsBuilder.path("/location/{location_id}").buildAndExpand(location.getId()).toUri());
+            return new ResponseEntity<Void>(httpHeaders, HttpStatus.CREATED);
+        }
+
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/location/{location_id}")
+    public ResponseEntity<Location> deleteLocation(@PathVariable Integer location_id) {
+        if (this.locationService.isLocationExists(this.locationService.findOne(location_id))) {
+            return new ResponseEntity<Location>(HttpStatus.NOT_FOUND);
+        } else {
+            this.locationService.delete(location_id);
+            return new ResponseEntity<Location>(HttpStatus.NO_CONTENT);
+        }
+    }
+
 }
