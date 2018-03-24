@@ -1,28 +1,37 @@
 package ua.nure.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import ua.nure.domain.Country;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 public class CountryRepository implements CrudRepository<Country> {
 
-//    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    //    public void setDataSource(DataSource dataSource) {
-//        this.dataSource = dataSource;
-//        this.jdbcTemplate = new JdbcTemplate(dataSource);
-//    }
-
     @Override
-    public void save(Country country) {
-        jdbcTemplate.update("insert into country(country_name) values (?)", country.getCountryName());
+    public Long save(Country country) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(
+                connection -> {
+                    PreparedStatement ps =
+                            connection.prepareStatement("insert into country(country_name) values (?)", new String[] {"id"});
+                    ps.setString(1, country.getCountryName());
+                    return ps;
+                },
+                keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override

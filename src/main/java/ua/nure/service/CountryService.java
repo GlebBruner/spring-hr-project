@@ -17,4 +17,20 @@ public class CountryService {
     public List<Country> findAll() {
         return repository.findAll();
     }
+
+    public Country findOne(Integer id) {
+        return this.repository.findOne(id);
+    }
+
+    public Long create(Country country) {
+        return this.repository.save(country);
+    }
+
+    public void delete(Integer id) {
+        this.repository.delete(id);
+    }
+
+    public boolean isCountryExists (Country country) {
+        return this.repository.findOne(country.getId().intValue()) != null;
+    }
 }

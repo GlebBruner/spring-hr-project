@@ -16,8 +16,8 @@ public class JobRepository implements CrudRepository<Job> {
     }
 
     @Override
-    public void save(Job job) {
-
+    public Long save(Job job) {
+        return null;
     }
 
     @Override
