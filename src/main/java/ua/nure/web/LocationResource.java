@@ -9,6 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import ua.nure.domain.Location;
 import ua.nure.service.LocationService;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,31 +22,32 @@ public class LocationResource {
         this.locationService = locationService;
     }
 
-    @RequestMapping("/location")
+    @RequestMapping("/locations")
     public ResponseEntity<List<Location>> getAllLocations () {
         return ResponseEntity.ok(this.locationService.findAll());
     }
 
-    @GetMapping("/location/{location_id}")
+    @GetMapping("/locations/{location_id}")
     public ResponseEntity<Location> getLocation(@PathVariable Integer location_id) {
         return ResponseEntity.ok(this.locationService.findOne(location_id));
     }
 
-    @PostMapping("/location")
+    @PostMapping("/locations")
     public ResponseEntity<Void> createLocation(@PathVariable Location location, UriComponentsBuilder componentsBuilder) {
 
         if (this.locationService.isLocationExists(location)) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         } else {
-            this.locationService.create(location);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(componentsBuilder.path("/location/{location_id}").buildAndExpand(location.getId()).toUri());
-            return new ResponseEntity<Void>(httpHeaders, HttpStatus.CREATED);
+            Long id = this.locationService.create(location);
+            return ResponseEntity.created(URI.create("/api/locations/" + id)).build();
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.setLocation(componentsBuilder.path("/location/{location_id}").buildAndExpand(location.getId()).toUri());
+//            return new ResponseEntity<Void>(httpHeaders, HttpStatus.CREATED);
         }
 
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/location/{location_id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/locations/{location_id}")
     public ResponseEntity<Location> deleteLocation(@PathVariable Integer location_id) {
         if (this.locationService.isLocationExists(this.locationService.findOne(location_id))) {
             return new ResponseEntity<Location>(HttpStatus.NOT_FOUND);

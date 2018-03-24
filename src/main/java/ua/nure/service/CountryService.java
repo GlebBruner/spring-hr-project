@@ -22,9 +22,8 @@ public class CountryService {
         return this.repository.findOne(id);
     }
 
-    public void create(Country country) {
-
-        this.repository.save(country);
+    public Long create(Country country) {
+        return this.repository.save(country);
     }
 
     public void delete(Integer id) {

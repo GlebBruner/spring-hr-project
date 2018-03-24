@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface CrudRepository<T> {
 
-    void save(T t);
+    Long save(T t);
 
     T findOne(Integer id);
 

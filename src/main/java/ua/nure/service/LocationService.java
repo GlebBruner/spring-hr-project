@@ -21,8 +21,8 @@ public class LocationService {
         return locationRepository.findOne(id);
     }
 
-    public void create (Location location) {
-        this.locationRepository.save(location);
+    public Long create(Location location) {
+        return this.locationRepository.save(location);
     }
 
     public void delete(Integer id) {

@@ -19,10 +19,11 @@ public class TaskRepository implements CrudRepository<Task>{
     }
 
     @Override
-    public void save(Task task) {
+    public Long save(Task task) {
         String insertTask = "insert into " + TABLE_NAME + " (description, title) " +
                 "values (?, ?)";
         this.jdbcTemplate.update(insertTask, task.getDescription(), task.getTitle());
+        return null; // fixme
     }
 
     @Override

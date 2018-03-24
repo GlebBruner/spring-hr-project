@@ -21,8 +21,8 @@ public class EmployeeService {
         return this.employeeRepository.findAll();
     }
 
-    public void create (Employee employee) {
-        this.employeeRepository.save(employee);
+    public Long create(Employee employee) {
+        return this.employeeRepository.save(employee);
     }
 
     public void delete(Integer id) {

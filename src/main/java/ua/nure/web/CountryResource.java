@@ -9,6 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import ua.nure.domain.Country;
 import ua.nure.service.CountryService;
 
+import java.net.URI;
 import java.util.List;
 
 //@RestController
@@ -21,8 +22,7 @@ public class CountryResource {
         this.countryService = countryService;
     }
 
-    @RequestMapping("/countries")
-    @ResponseBody
+    @GetMapping("/countries")
     public ResponseEntity<List<Country>> getAllCountries() {
         return ResponseEntity.ok(this.countryService.findAll());
     }
@@ -33,17 +33,15 @@ public class CountryResource {
     }
 
     @PostMapping("/countries")
-    public ResponseEntity<Void> createCountry (@RequestBody Country country, UriComponentsBuilder builder) {
+    public ResponseEntity<Void> createCountry(@RequestBody Country country) {
+        if (this.countryService.isCountryExists(country)) return new ResponseEntity<>(HttpStatus.CONFLICT);
 
-        if (this.countryService.isCountryExists(country)) {
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-        }
+        Long id = this.countryService.create(country);
 
-        this.countryService.create(country);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(builder.path("/countries/{country_id}").buildAndExpand(country.getId()).toUri());
-        return new ResponseEntity<Void>(httpHeaders, HttpStatus.CREATED);
+        return ResponseEntity.created(URI.create("/api/countries/" + id)).build();
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.setLocation(builder.path("/countries/{country_id}").buildAndExpand(country.getId()).toUri());
+//        return new ResponseEntity<Void>(httpHeaders, HttpStatus.CREATED);
 
     }
 

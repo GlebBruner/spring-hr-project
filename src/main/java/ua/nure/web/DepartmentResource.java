@@ -10,6 +10,7 @@ import ua.nure.domain.Department;
 import ua.nure.domain.Employee;
 import ua.nure.service.DepartmentService;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,9 +28,9 @@ public class DepartmentResource {
     @GetMapping("/departments")
     public ResponseEntity<List<Department>> getAllDepartments () {
         List<Department>  allDepartments = this.departmentService.findAll();
-        if (allDepartments.isEmpty()) {
-            return new ResponseEntity<List<Department>>(HttpStatus.NO_CONTENT);
-        }
+//        if (allDepartments.isEmpty()) {
+//            return new ResponseEntity<List<Department>>(HttpStatus.NO_CONTENT);
+//        } // fixme empty array is not equal to no content
         return ResponseEntity.ok(allDepartments);
     }
 
@@ -43,10 +44,11 @@ public class DepartmentResource {
         if (this.departmentService.isDepartmentExists(department)) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         } else {
-            this.departmentService.create(department);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(uriBuilder.path("/departments/{department_id}").buildAndExpand(department.getId()).toUri());
-            return new ResponseEntity<Void>(httpHeaders, HttpStatus.CREATED);
+            Long id = this.departmentService.create(department);
+            return ResponseEntity.created(URI.create("/api/departments/" + id)).build();
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.setLocation(uriBuilder.path("/departments/{department_id}").buildAndExpand(department.getId()).toUri());
+//            return new ResponseEntity<Void>(httpHeaders, HttpStatus.CREATED);
         }
     }
 

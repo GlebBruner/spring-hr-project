@@ -22,9 +22,8 @@ public class DepartmentService {
         return this.departmentRepository.findOne(id);
     }
 
-
-    public void create (Department department) {
-        this.departmentRepository.save(department);
+    public Long create(Department department) {
+        return this.departmentRepository.save(department);
     }
 
     public void delete(Integer id) {

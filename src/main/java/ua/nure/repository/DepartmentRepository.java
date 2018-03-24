@@ -2,10 +2,13 @@ package ua.nure.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import ua.nure.domain.Department;
 import ua.nure.domain.Employee;
 import ua.nure.domain.Location;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -24,9 +27,20 @@ public class DepartmentRepository implements CrudRepository<Department> {
     }
 
     @Override
-    public void save(Department department) {
-        String insertDepartment = "insert into " + TABLE_NAME + " (id, department_name, location_id) values (?, ?, ?)";
-        this.jdbcTemplate.update(insertDepartment, department.getId(), department.getDepartmentName(), department.getLocation().getId());
+    public Long save(Department department) {
+//        String insertDepartment = "insert into " + TABLE_NAME + " (id, department_name, location_id) values (?, ?, ?)";
+//        this.jdbcTemplate.update(insertDepartment, department.getId(), department.getDepartmentName(), department.getLocation().getId());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(
+                connection -> {
+                    PreparedStatement ps =
+                            connection.prepareStatement("insert into " + TABLE_NAME + " (department_name, location_id) values (?, ?)", new String[] {"id"});
+                    ps.setString(1, department.getDepartmentName());
+                    ps.setLong(2, department.getLocation().getId());
+                    return ps;
+                },
+                keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override

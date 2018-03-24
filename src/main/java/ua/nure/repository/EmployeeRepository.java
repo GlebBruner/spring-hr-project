@@ -2,12 +2,17 @@ package ua.nure.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import ua.nure.domain.Department;
 import ua.nure.domain.Employee;
 import ua.nure.domain.Job;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,11 +30,30 @@ public class EmployeeRepository implements CrudRepository<Employee> {
     }
 
     @Override
-    public void save(Employee employee) {
-        String insertEmployee = "insert into " + TABLE_NAME + "(email, first_name, hire_date, last_name, phone_number, " +
-                "salary, department_id, manager_id) VALUES(?,?,?,?,?,?,?,?)";
-        this.jdbcTemplate.update(insertEmployee, employee.getEmail(), employee.getFirstName(), employee.getHireDate(),
-                employee.getLastName(), employee.getPhoneNumber(), employee.getSalary(), employee.getDepartment().getId(), employee.getManager().getId());
+    public Long save(Employee employee) {
+//        String insertEmployee = "insert into " + TABLE_NAME + "(email, first_name, hire_date, last_name, phone_number, " +
+//                "salary, department_id, manager_id) VALUES(?,?,?,?,?,?,?,?)";
+//        this.jdbcTemplate.update(insertEmployee, employee.getEmail(), employee.getFirstName(), employee.getHireDate(),
+//                employee.getLastName(), employee.getPhoneNumber(), employee.getSalary(), employee.getDepartment().getId(), employee.getManager().getId());
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(
+                connection -> {
+                    PreparedStatement ps =
+                            connection.prepareStatement("insert into " + TABLE_NAME + "(email, first_name, hire_date, last_name, phone_number, " +
+                "salary, department_id, manager_id) VALUES(?,?,?,?,?,?,?,?)", new String[] {"id"});
+                    ps.setString(1, employee.getEmail());
+                    ps.setString(2, employee.getFirstName());
+                    ps.setDate(3, Date.valueOf(employee.getHireDate().atZone(ZoneId.systemDefault()).toLocalDate()));
+                    ps.setString(4, employee.getLastName());
+                    ps.setString(5, employee.getPhoneNumber());
+                    ps.setLong(6, employee.getSalary());
+                    ps.setLong(7, employee.getDepartment().getId());
+                    ps.setLong(8, employee.getManager().getId());
+                    return ps;
+                },
+                keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override
