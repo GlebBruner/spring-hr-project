@@ -31,6 +31,12 @@
     <bean id="employeeService" class="ua.nure.service.EmployeeService" autowire="byType"/>
     <bean id="employeeResource" class="ua.nure.web.EmployeeResource" autowire="byType"/>
 
+    <bean id="jobService" class="ua.nure.service.JobService" autowire="byType"/>
+    <bean id="jobResource" class="ua.nure.web.JobResource" autowire="byType"/>
+
+    <bean id="taskService" class="ua.nure.service.TaskService" autowire="byType"/>
+    <bean id="taskResource" class="ua.nure.web.TaskResource" autowire="byType"/>
+
     <mvc:annotation-driven />
     <beans profile="dev">
 

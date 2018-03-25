@@ -1,11 +1,9 @@
 package ua.nure.web;
 
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import ua.nure.domain.Department;
 import ua.nure.domain.Employee;
 import ua.nure.service.DepartmentService;
