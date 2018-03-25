@@ -40,7 +40,7 @@ public class DepartmentResource {
     }
 
     @PostMapping("/departments")
-    public ResponseEntity<Void> createDepartment (@PathVariable Department department) {
+    public ResponseEntity<Void> createDepartment (@RequestBody Department department) {
         Long id = this.departmentService.create(department);
         return ResponseEntity.created(URI.create("/api/departments/" + id)).build();
     }

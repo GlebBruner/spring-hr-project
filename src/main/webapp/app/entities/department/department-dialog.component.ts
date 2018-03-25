@@ -37,15 +37,16 @@ export class DepartmentDialogComponent implements OnInit {
         this.locationService
             .query({filter: 'department-is-null'})
             .subscribe((res: ResponseWrapper) => {
-                if (!this.department.location || !this.department.location.id) {
-                    this.locations = res.json;
-                } else {
-                    this.locationService
-                        .find(this.department.location.id)
-                        .subscribe((subRes: Location) => {
-                            this.locations = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
-                }
+                this.locations = res.json;
+                // if (!this.department.location || !this.department.location.id) {
+                //
+                // } else {
+                //     this.locationService
+                //         .find(this.department.location.id)
+                //         .subscribe((subRes: Location) => {
+                //             this.locations = [subRes].concat(res.json);
+                //         }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                // }
             }, (res: ResponseWrapper) => this.onError(res.json));
     }
 

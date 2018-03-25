@@ -48,6 +48,7 @@ export class EmployeeDialogComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        this.employee.hireDate = new Date();
         if (this.employee.id !== undefined) {
             this.subscribeToSaveResponse(
                 this.employeeService.update(this.employee));

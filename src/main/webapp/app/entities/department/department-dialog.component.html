@@ -27,7 +27,6 @@
         <div class="form-group">
             <label class="form-control-label" for="field_location">Location</label>
             <select class="form-control" id="field_location" name="location" [(ngModel)]="department.location">
-                <option [ngValue]="null"></option>
                 <option [ngValue]="locationOption.id === department.location?.id ? department.location : locationOption" *ngFor="let locationOption of locations; trackBy: trackLocationById">{{locationOption.id}}</option>
             </select>
         </div>

@@ -45,7 +45,7 @@ public class EmployeeRepository implements CrudRepository<Employee> {
                     ps.setString(5, employee.getPhoneNumber());
                     ps.setLong(6, employee.getSalary());
                     ps.setLong(7, employee.getDepartment().getId());
-                    ps.setLong(8, employee.getManager().getId());
+                    ps.setObject(8, employee.getManager() != null ? employee.getManager().getId() : null);
                     return ps;
                 },
                 keyHolder);

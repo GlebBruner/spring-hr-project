@@ -32,7 +32,7 @@
                 <td>{{location.city}}</td>
                 <td>
                     <div *ngIf="location.country">
-                        <a [routerLink]="['../country', location.country?.id ]" >{{location.country?.id}}</a>
+                        <a [routerLink]="['../country', location.country?.id ]" >{{location.country?.countryName}}</a>
                     </div>
                 </td>
                 <td class="text-right">

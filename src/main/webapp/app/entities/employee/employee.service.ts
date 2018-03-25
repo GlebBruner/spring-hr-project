@@ -73,7 +73,7 @@ export class EmployeeService {
     private convert(employee: Employee): Employee {
         const copy: Employee = Object.assign({}, employee);
 
-        copy.hireDate = this.dateUtils.toDate(employee.hireDate);
+        // copy.hireDate = this.dateUtils.toDate(employee.hireDate);
         return copy;
     }
 }
