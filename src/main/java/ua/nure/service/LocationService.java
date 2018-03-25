@@ -33,9 +33,4 @@ public class LocationService {
         this.locationRepository.update(location);
     }
 
-    public boolean isLocationExists(Location location) {
-//        return this.locationRepository.findOne(location.getId().intValue()) != null;
-        return false;
-    }
-
 }

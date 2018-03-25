@@ -34,8 +34,4 @@ public class CountryService {
         this.repository.update(country);
     }
 
-    public boolean isCountryExists (Country country) {
-//        return this.repository.findOne(country.getId().intValue()) != null;
-        return false;
-    }
 }

@@ -34,8 +34,4 @@ public class DepartmentService {
         this.departmentRepository.update(department);
     }
 
-    public boolean isDepartmentExists (Department department) {
-        return this.departmentRepository.findOne(department.getId().intValue()) != null;
-    }
-
 }
