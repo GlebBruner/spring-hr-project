@@ -14,6 +14,8 @@ import java.util.List;
 
 public class CountryRepository implements CrudRepository<Country> {
 
+    private static final String TABLE_NAME = "country";
+
     private JdbcTemplate jdbcTemplate;
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
@@ -52,7 +54,7 @@ public class CountryRepository implements CrudRepository<Country> {
 
     @Override
     public void update(Country country) {
-        String updateLocation = "update country set country_name = ? where id = ?";
-        this.jdbcTemplate.update(updateLocation, country.getCountryName(), country.getId());
+        String updateCountry = "update " + TABLE_NAME  + " set country_name = ? where id = ?";
+        this.jdbcTemplate.update(updateCountry, country.getCountryName(), country.getId());
     }
 }

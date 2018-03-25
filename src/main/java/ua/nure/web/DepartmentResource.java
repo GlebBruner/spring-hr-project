@@ -40,43 +40,35 @@ public class DepartmentResource {
     }
 
     @PostMapping("/departments")
-    public ResponseEntity<Void> createDepartment (@PathVariable Department department, UriComponentsBuilder uriBuilder) {
-        if (this.departmentService.isDepartmentExists(department)) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        } else {
-            Long id = this.departmentService.create(department);
-            return ResponseEntity.created(URI.create("/api/departments/" + id)).build();
-        }
+    public ResponseEntity<Void> createDepartment (@PathVariable Department department) {
+        Long id = this.departmentService.create(department);
+        return ResponseEntity.created(URI.create("/api/departments/" + id)).build();
     }
 
     @DeleteMapping(value = "/departments/{department_id}")
     public ResponseEntity<Department> deleteDepartment (@PathVariable Integer department_id) {
-        if (this.departmentService.findOne(department_id) == null) {
-            return new ResponseEntity<Department>(HttpStatus.NOT_FOUND);
-        } else {
-            this.departmentService.delete(department_id);
-            return new ResponseEntity<Department>(HttpStatus.NO_CONTENT);
-        }
+        this.departmentService.delete(department_id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/departments/{department_id}/employees")
     public ResponseEntity<List<Employee>> getDepartmentsEmployees(@PathVariable Integer department_id) {
         if (this.departmentService.findOne(department_id) == null) {
-            return new ResponseEntity<List<Employee>>(HttpStatus.NOT_FOUND); //there's no such department
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //there's no such department
         } else {
             Set<Employee> departmentsEmployees = this.departmentService.findOne(department_id).getEmployees();
             if (departmentsEmployees.isEmpty()) {
-                return new ResponseEntity<List<Employee>>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 return ResponseEntity.ok(new ArrayList<>(departmentsEmployees));
             }
         }
     }
 
-    @PutMapping("/departments/{department_id}")
-    public ResponseEntity<Void> updateDepartment (@RequestBody Department department, @PathVariable Integer department_id) {
+    @PutMapping("/departments")
+    public ResponseEntity<Void> updateDepartment (@RequestBody Department department) {
 
-        Department updatedDepartment = this.departmentService.findOne(department_id);
+        Department updatedDepartment = this.departmentService.findOne(department.getId().intValue());
 
         if (updatedDepartment == null) {
             return ResponseEntity.notFound().build();

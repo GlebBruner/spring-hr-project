@@ -1,5 +1,6 @@
 package ua.nure.repository;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,6 +17,7 @@ import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 public class EmployeeRepository implements CrudRepository<Employee> {
 
@@ -23,7 +25,6 @@ public class EmployeeRepository implements CrudRepository<Employee> {
     private static final String TABLE_NAME = "employee";
 
     private JdbcTemplate jdbcTemplate;
-
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -52,36 +53,19 @@ public class EmployeeRepository implements CrudRepository<Employee> {
     }
 
     @Override
+    public void update(Employee employee) {
+        String updateEmployee = "update " + TABLE_NAME + " set email = ?, first_name = ?, hire_date = ?, " +
+                " last_name = ?, phone_number = ?, salary = ?, department_id = ?, manager_id = ? where id = ?";
+        this.jdbcTemplate.update(updateEmployee, employee.getEmail(), employee.getFirstName(), employee.getHireDate(), employee.getLastName(),
+                employee.getPhoneNumber(), employee.getSalary(), employee.getDepartment().getId(), employee.getManager().getId(), employee.getId());
+    }
+
+    @Override
     public Employee findOne(Integer id) {
         String selectOneEmployee = "select e.id, e.email, e.first_name, " +
-                "e.hire_date, e.last_name, e.phone_number, e.salary, e.department_id, e.manager_id , d.id, d.department_name, d.location_id " +
+                "e.hire_date, e.last_name, e.phone_number, e.salary, e.department_id, e.manager_id , d.department_name, d.location_id " +
                 " from employee e left join department d on e.department_id = d.id where e.id = ?";
-        return this.jdbcTemplate.queryForObject(selectOneEmployee, new Object[]{id}, new RowMapper<Employee>() {
-            @Override
-            public Employee mapRow(ResultSet resultSet, int i) throws SQLException {
-                Employee employee = new Employee();
-                employee.setId(resultSet.getLong("e.id"));
-                employee.setFirstName(resultSet.getString("e.first_name"));
-                employee.setLastName(resultSet.getString("e.last_name"));
-                employee.setHireDate(resultSet.getTimestamp("e.hire_date").toInstant());
-                employee.setEmail(resultSet.getString("e.email"));
-                employee.setPhoneNumber(resultSet.getString("e.phone_number"));
-                employee.setSalary(resultSet.getLong("e.salary"));
-
-                //department setting
-                Department departmentForThisEmployee = new Department();
-                departmentForThisEmployee.setId(resultSet.getLong("d.id"));
-                departmentForThisEmployee.setDepartmentName(resultSet.getString("d.department_name"));
-
-                //setting manager(employee)
-                Employee managerForThisEmployee = findOne(resultSet.getInt("e.manager"));
-                employee.setManager(managerForThisEmployee);
-
-                employee.setJobs(findAllEmployeesJobs(id));
-
-                return employee;
-            }
-        });
+        return this.jdbcTemplate.queryForObject(selectOneEmployee, new Object[]{id}, employeeMapper::apply);
     }
 
     @Override
@@ -89,32 +73,7 @@ public class EmployeeRepository implements CrudRepository<Employee> {
         String selectAllEmployees = "select e.id, e.email, e.first_name, " +
                 "e.hire_date, e.last_name, e.phone_number, e.salary, e.department_id, e.manager_id , d.id, d.department_name, d.location_id " +
                 " from employee e left join department d on e.department_id = d.id ";
-        return jdbcTemplate.query(selectAllEmployees, new RowMapper<Employee>() {
-            @Override
-            public Employee mapRow(ResultSet resultSet, int i) throws SQLException {
-                Employee employee = new Employee();
-                employee.setId(resultSet.getLong("e.id"));
-                employee.setFirstName(resultSet.getString("e.first_name"));
-                employee.setLastName(resultSet.getString("e.last_name"));
-                employee.setHireDate(resultSet.getTimestamp("e.hire_date").toInstant());
-                employee.setEmail(resultSet.getString("e.email"));
-                employee.setPhoneNumber(resultSet.getString("e.phone_number"));
-                employee.setSalary(resultSet.getLong("e.salary"));
-
-                //department setting
-                Department departmentForThisEmployee = new Department();
-                departmentForThisEmployee.setId(resultSet.getLong("d.id"));
-                departmentForThisEmployee.setDepartmentName(resultSet.getString("d.department_name"));
-
-                //setting manager(employee)
-                Employee managerForThisEmployee = findOne(resultSet.getInt("e.manager"));
-                employee.setManager(managerForThisEmployee);
-
-                employee.setJobs(findAllEmployeesJobs((int) resultSet.getLong("e.id")));
-
-                return employee;
-            }
-        });
+        return jdbcTemplate.query(selectAllEmployees, employeeMapper::apply);
     }
 
     @Override
@@ -123,27 +82,46 @@ public class EmployeeRepository implements CrudRepository<Employee> {
         this.jdbcTemplate.update(deleteEmployee, id);
     }
 
-    private Set<Job> findAllEmployeesJobs(Integer id) {
+    private Set<Job> findAllEmployeesJobs(Long id) {
         String selectJobsByEmployeeId = "select j.id, j.job_title, j.max_salary, j.min_salary, j.employee_id from job j where j.employee_id = ?";
-        return new HashSet<Job>(this.jdbcTemplate.query(selectJobsByEmployeeId, new RowMapper<Job>() {
-            @Override
-            public Job mapRow(ResultSet resultSet, int i) throws SQLException {
-                Job job = new Job();
-                job.setId(resultSet.getLong("j.id"));
-                job.setJobTitle(resultSet.getString("j.job_title"));
-                job.setMinSalary(resultSet.getLong("j.min_salary"));
-                job.setMaxSalary(resultSet.getLong("j.max_salary"));
-                job.setEmployee(findOne(id));
-                return job;
-            }
+        return new HashSet<>(this.jdbcTemplate.query(selectJobsByEmployeeId, new Object[]{id}, (resultSet, i) -> { // added new Object[]{id}, as a parameter j.employee_id
+            Job job = new Job();
+            job.setId(resultSet.getLong(1));
+            job.setJobTitle(resultSet.getString(2));
+            job.setMinSalary(resultSet.getLong(4));
+            job.setMaxSalary(resultSet.getLong(3));
+            job.setEmployee(findOne(id.intValue()));
+            return job;
         }));
     }
 
-    @Override
-    public void update(Employee employee) {
-        String updateEmployee = "update " + TABLE_NAME + " set email = ?, first_name = ?, hire_date = ?, " +
-                " last_name = ?, phone_number = ?, salary = ?, department_id = ?, manager_id = ? where id = ?";
-        this.jdbcTemplate.update(updateEmployee, employee.getEmail(), employee.getFirstName(), employee.getHireDate(), employee.getLastName(),
-                employee.getPhoneNumber(), employee.getSalary(), employee.getDepartment().getId(), employee.getManager().getId());
-    }
+    private BiFunction<ResultSet, Integer, Employee> employeeMapper = (resultSet, integer) -> {
+        try {
+            Employee employee = new Employee();
+            employee.setId(resultSet.getLong(1));
+            employee.setEmail(resultSet.getString(2));
+            employee.setFirstName(resultSet.getString(3));
+            employee.setHireDate(resultSet.getTimestamp(4).toInstant());
+            employee.setLastName(resultSet.getString(5));
+            employee.setPhoneNumber(resultSet.getString(6));
+            employee.setSalary(resultSet.getLong(7));
+
+            //department setting
+            Department departmentForThisEmployee = new Department();
+            departmentForThisEmployee.setId(resultSet.getLong(8));
+            departmentForThisEmployee.setDepartmentName(resultSet.getString(10));
+
+            //setting manager(employee)
+            Employee managerForThisEmployee = findOne(resultSet.getInt(9));
+            employee.setManager(managerForThisEmployee);
+
+            // Jobs Set set
+            employee.setJobs(findAllEmployeesJobs(resultSet.getLong(1)));
+
+            return employee;
+
+        } catch (SQLException e) {
+            throw new DataIntegrityViolationException(e.getSQLState());
+        }
+    };
 }

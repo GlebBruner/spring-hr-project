@@ -12,7 +12,7 @@ import ua.nure.service.CountryService;
 import java.net.URI;
 import java.util.List;
 
-//@RestController
+@RestController
 @RequestMapping("/api")
 public class CountryResource {
 
@@ -34,7 +34,6 @@ public class CountryResource {
 
     @PostMapping("/countries")
     public ResponseEntity<Void> createCountry(@RequestBody Country country) {
-        if (this.countryService.isCountryExists(country)) return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         Long id = this.countryService.create(country);
 
@@ -45,19 +44,15 @@ public class CountryResource {
     @DeleteMapping("/countries/{country_id}")
     public ResponseEntity<Void> deleteCountry (@PathVariable Integer country_id) {
 
-        if (this.countryService.isCountryExists(this.countryService.findOne(country_id))) {
-            return ResponseEntity.notFound().build();
-        } else {
-            this.countryService.delete(country_id);
-            return ResponseEntity.<Void>accepted().build();
-        }
+        this.countryService.delete(country_id);
+        return ResponseEntity.<Void>accepted().build();
 
     }
 
-    @PutMapping("/countries/{country_id}")
-    public ResponseEntity<Void> updateCountry(@PathVariable Integer country_id, @RequestBody Country country) {
+    @PutMapping("/countries")
+    public ResponseEntity<Void> updateCountry(@RequestBody Country country) {
 
-        Country country1 = countryService.findOne(country_id);
+        Country country1 = countryService.findOne(country.getId().intValue());
 
         if (country1 == null) {
             return ResponseEntity.notFound().build();

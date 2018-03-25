@@ -35,27 +35,20 @@ public class LocationResource {
     @PostMapping("/locations")
     public ResponseEntity<Void> createLocation(@RequestBody Location location) {
 
-        if (this.locationService.isLocationExists(location)) {
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-        }
         Long id = this.locationService.create(location);
         return ResponseEntity.created(URI.create("/api/locations/" + id)).build();
     }
 
     @DeleteMapping("/locations/{location_id}")
     public ResponseEntity<Location> deleteLocation(@PathVariable Integer location_id) {
-        if (this.locationService.isLocationExists(this.locationService.findOne(location_id))) {
-            return new ResponseEntity<Location>(HttpStatus.NOT_FOUND);
-        } else {
-            this.locationService.delete(location_id);
-            return new ResponseEntity<Location>(HttpStatus.NO_CONTENT);
-        }
+        this.locationService.delete(location_id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/locations/{location_id}")
-    public ResponseEntity<Void> updateLocation (@RequestBody Location location, @PathVariable Integer location_id) {
+    @PutMapping("/locations")
+    public ResponseEntity<Void> updateLocation (@RequestBody Location location) {
 
-        Location updatedLocation = this.locationService.findOne(location_id);
+        Location updatedLocation = this.locationService.findOne(location.getId().intValue());
 
         if (updatedLocation == null) {
             return ResponseEntity.notFound().build();

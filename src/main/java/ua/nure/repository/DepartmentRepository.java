@@ -1,5 +1,6 @@
 package ua.nure.repository;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 public class DepartmentRepository implements CrudRepository<Department> {
 
@@ -46,27 +48,7 @@ public class DepartmentRepository implements CrudRepository<Department> {
         String selectOneDepartment = "select d.id, d.department_name, d.location_id, " +
                 "l.id, l.city, l.postal_code, l.street_address, l.country_id from department d left join location l " +
                 "on d.location_id = l.id where d.id = ?";
-        return this.jdbcTemplate.queryForObject(selectOneDepartment, new Object[]{id}, new RowMapper<Department>() {
-            @Override
-            public Department mapRow(ResultSet resultSet, int i) throws SQLException {
-                Department department = new Department();
-                department.setId(resultSet.getLong("d.id"));
-                department.setDepartmentName(resultSet.getString("d.department_name"));
-
-                if (resultSet.getLong("d.location_id") != 0) {
-                    Location locationForThisDepartment = new Location();
-                    locationForThisDepartment.setId(resultSet.getLong("l.id"));
-                    locationForThisDepartment.setCity(resultSet.getString("l.city"));
-                    locationForThisDepartment.setPostalCode(resultSet.getString("l.postal_code"));
-                    locationForThisDepartment.setStreetAddress(resultSet.getString("l.street_address"));
-                    department.setLocation(locationForThisDepartment);
-                }
-
-                department.setEmployees(findAllEmployeesInDepartment(resultSet.getLong("d.id")));
-
-                return department;
-            }
-        });
+        return this.jdbcTemplate.queryForObject(selectOneDepartment, new Object[]{id}, departmentMapper::apply);
     }
 
     @Override
@@ -74,28 +56,7 @@ public class DepartmentRepository implements CrudRepository<Department> {
         String selectAllDepartments = "select d.id, d.department_name, d.location_id, " +
                 "l.id, l.city, l.postal_code, l.street_address, l.country_id from department d left join location l " +
                 "on d.location_id = l.id";
-//        return this.jdbcTemplate.query(selectAllDepartments, new DepartmentMapper());
-        return this.jdbcTemplate.query(selectAllDepartments, new RowMapper<Department>() {
-            @Override
-            public Department mapRow(ResultSet resultSet, int i) throws SQLException {
-                Department department = new Department();
-                department.setId(resultSet.getLong("d.id"));
-                department.setDepartmentName(resultSet.getString("d.department_name"));
-
-                if (resultSet.getLong("d.location_id") != 0) {
-                    Location locationForThisDepartment = new Location();
-                    locationForThisDepartment.setId(resultSet.getLong("l.id"));
-                    locationForThisDepartment.setCity(resultSet.getString("l.city"));
-                    locationForThisDepartment.setPostalCode(resultSet.getString("l.postal_code"));
-                    locationForThisDepartment.setStreetAddress(resultSet.getString("l.street_address"));
-                    department.setLocation(locationForThisDepartment);
-                }
-
-                department.setEmployees(findAllEmployeesInDepartment(resultSet.getLong("d.id")));
-
-                return department;
-            }
-        });
+        return this.jdbcTemplate.query(selectAllDepartments, departmentMapper::apply);
     }
 
     @Override
@@ -106,22 +67,20 @@ public class DepartmentRepository implements CrudRepository<Department> {
 
     private  Set<Employee> findAllEmployeesInDepartment (Long id) {
         String selectEmployeeByDepId = "select e.id, e.email, e.first_name, e.hire_date, " +
-                "e.last_name, e.phone_number, e.salary, e.department_id, e.manager id from " +
+                "e.last_name, e.phone_number, e.salary, e.department_id, e.manager_id from " +
                 "employee e where e.department_id = ?";
-        return new HashSet<Employee>(this.jdbcTemplate.query(selectEmployeeByDepId, new RowMapper<Employee>() {
-            @Override
-            public Employee mapRow(ResultSet resultSet, int i) throws SQLException {
-                Employee employee = new Employee();
-                employee.setId(resultSet.getLong("e.id"));
-                employee.setFirstName(resultSet.getString("e.first_name"));
-                employee.setHireDate(resultSet.getTimestamp("e.hire_date").toInstant());
-                employee.setLastName(resultSet.getString("e.last_name"));
-                employee.setPhoneNumber(resultSet.getString("e.phone_number"));
-                employee.setSalary(resultSet.getLong("e.salary"));
+        return new HashSet<>(this.jdbcTemplate.query(selectEmployeeByDepId, new Object[]{id}, (resultSet, i) -> {
+            Employee employee = new Employee();
+            employee.setId(resultSet.getLong(1));
+            employee.setEmail(resultSet.getString(2));
+            employee.setFirstName(resultSet.getString(3));
+            employee.setHireDate(resultSet.getTimestamp(4).toInstant());
+            employee.setLastName(resultSet.getString(5));
+            employee.setPhoneNumber(resultSet.getString(6));
+            employee.setSalary(resultSet.getLong(7));
 
-                //not set: jobs, Department, manager a.k.a another Employee
-                return employee;
-            }
+            //not set: jobs, Department, manager a.k.a another Employee
+            return employee;
         }));
     }
 
@@ -130,4 +89,25 @@ public class DepartmentRepository implements CrudRepository<Department> {
         String updateDepartment = "update " + TABLE_NAME + " set department_name = ?, location_id = ? where id = ?";
         this.jdbcTemplate.update(updateDepartment, department.getDepartmentName(), department.getLocation().getId(), department.getId());
     }
+
+    private BiFunction<ResultSet, Integer, Department> departmentMapper = (resultSet, i) -> {
+        try {
+            Department department = new Department();
+            department.setId(resultSet.getLong(1));
+            department.setDepartmentName(resultSet.getString(2));
+            if (resultSet.getLong(3) != 0) {
+                Location locationForDepartment = new Location();
+                locationForDepartment.setId(resultSet.getLong(4));
+                locationForDepartment.setCity(resultSet.getString(5));
+                locationForDepartment.setPostalCode(resultSet.getString(6));
+                locationForDepartment.setStreetAddress(resultSet.getString(7));
+                //we also need to setCountry, we have l.country_id. but we need to do 1 more query
+                department.setLocation(locationForDepartment);
+            }
+            department.setEmployees(findAllEmployeesInDepartment(resultSet.getLong(1)));
+            return department;
+        } catch (SQLException e) {
+            throw new DataIntegrityViolationException(e.getSQLState());
+        }
+    };
 }
