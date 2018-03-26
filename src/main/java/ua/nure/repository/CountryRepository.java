@@ -1,9 +1,11 @@
 package ua.nure.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import ua.nure.domain.Country;
 
 import javax.sql.DataSource;
@@ -12,12 +14,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+@Repository
 public class CountryRepository implements CrudRepository<Country> {
 
     private static final String TABLE_NAME = "country";
 
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

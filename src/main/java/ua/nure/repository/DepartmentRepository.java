@@ -1,10 +1,12 @@
 package ua.nure.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import ua.nure.domain.Department;
 import ua.nure.domain.Employee;
 import ua.nure.domain.Location;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+@Repository
 public class DepartmentRepository implements CrudRepository<Department> {
 
 
@@ -24,6 +27,7 @@ public class DepartmentRepository implements CrudRepository<Department> {
 
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

@@ -1,15 +1,19 @@
 package ua.nure.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ua.nure.domain.Country;
 import ua.nure.repository.CountryRepository;
 
 import java.util.List;
 
+@Service
 public class CountryService {
 
 
     private CountryRepository repository;
 
+    @Autowired
     public void setRepository(CountryRepository repository) {
         this.repository = repository;
     }

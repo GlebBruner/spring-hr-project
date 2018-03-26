@@ -1,6 +1,7 @@
 package ua.nure.web;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ public class CountryResource {
 
     private CountryService countryService;
 
+    @Autowired
     public void setCountryService(CountryService countryService) {
         this.countryService = countryService;
     }

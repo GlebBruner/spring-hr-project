@@ -1,10 +1,12 @@
 package ua.nure.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import ua.nure.domain.Country;
 import ua.nure.domain.Location;
 
@@ -14,12 +16,14 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.function.BiFunction;
 
+@Repository
 public class LocationRepository implements CrudRepository<Location>{
 
     private static final String TABLE_NAME = "location";
 
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

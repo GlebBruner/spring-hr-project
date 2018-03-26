@@ -1,14 +1,18 @@
 package ua.nure.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ua.nure.domain.Location;
 import ua.nure.repository.LocationRepository;
 
 import java.util.List;
 
+@Service
 public class LocationService {
 
     private LocationRepository locationRepository;
 
+    @Autowired
     public void setLocationRepository(LocationRepository locationRepository) {
         this.locationRepository = locationRepository;
     }
