@@ -13,23 +13,23 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public Long createTask (Task task) {
-        return this.taskRepository.save(task);
-    }
-
-    public Task getTask (Integer id) {
+    public Task findOne(Integer id) {
         return this.taskRepository.findOne(id);
     }
 
-    public void updateTask (Task task) {
+    public List<Task> findAll() {
+        return this.taskRepository.findAll();
+    }
+
+    public Long create(Task task) {
+        return this.taskRepository.save(task);
+    }
+
+    public void update(Task task) {
         this.taskRepository.update(task);
     }
 
-    public void deleteTask(Integer id) {
+    public void delete(Integer id) {
         this.taskRepository.delete(id);
-    }
-
-    public List<Task> findAllTasks () {
-        return this.taskRepository.findAll();
     }
 }

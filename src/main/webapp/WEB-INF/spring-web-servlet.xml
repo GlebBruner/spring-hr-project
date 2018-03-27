@@ -1,14 +1,18 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <context:component-scan base-package="ua.nure" />
 
@@ -37,7 +41,24 @@
     <bean id="taskService" class="ua.nure.service.TaskService" autowire="byType"/>
     <bean id="taskResource" class="ua.nure.web.TaskResource" autowire="byType"/>
 
+    <bean id="serviceListener" class="ua.nure.events.ServiceListener" autowire="byType"/>
+    <bean id="servicePublisher" class="ua.nure.events.ServicePublisher" autowire="byType"/>
+
+    <tx:advice id="adviceFindReadOnly" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="find*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="allServices" expression="execution(* ua.nure.service.*.*(..))"/>
+        <!--we can also define specific service-->
+        <!--<aop:pointcut id="CountryService" expression="execution(* ua.nure.service.CountryService.*(..))"/>-->
+        <aop:advisor advice-ref="adviceFindReadOnly" pointcut-ref="allServices"/>
+    </aop:config>
+
     <mvc:annotation-driven />
+
     <beans profile="dev">
 
         <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -54,6 +75,10 @@
         <bean id="jdbcTemplate1" class="org.springframework.jdbc.core.JdbcTemplate">
             <property name="dataSource" ref="dataSource1"/>
         </bean>
+
+        <!--<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <property name="dataSource" ref="dataSource1"/>
+        </bean>-->
 
     </beans>
 
@@ -74,6 +99,9 @@
             <property name="dataSource" ref="dataSource2"/>
         </bean>
 
+        <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <property name="dataSource" ref="dataSource2"/>
+        </bean>
 
     </beans>
 
