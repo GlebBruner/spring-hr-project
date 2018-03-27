@@ -128,4 +128,8 @@ public class EmployeeRepository implements CrudRepository<Employee> {
             throw new DataIntegrityViolationException(e.getSQLState());
         }
     };
+
+    public BiFunction<ResultSet, Integer, Employee> getEmployeeMapper() {
+        return employeeMapper;
+    }
 }
