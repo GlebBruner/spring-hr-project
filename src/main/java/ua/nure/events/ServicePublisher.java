@@ -2,7 +2,9 @@ package ua.nure.events;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ServicePublisher<T> implements ApplicationEventPublisherAware{
 
     private ApplicationEventPublisher applicationEventPublisher;

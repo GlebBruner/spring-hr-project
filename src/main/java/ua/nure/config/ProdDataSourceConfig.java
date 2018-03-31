@@ -11,8 +11,8 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-@Profile("dev")
-public class DevDataSourceConfig implements DataSourceConfig {
+@Profile("prod")
+public class ProdDataSourceConfig implements DataSourceConfig{
 
     @Autowired
     PropertyPlaceholderConfigurer placeholderConfigurer;
