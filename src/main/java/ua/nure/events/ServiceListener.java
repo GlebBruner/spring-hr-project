@@ -2,37 +2,28 @@ package ua.nure.events;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
-public class ServiceListener implements ApplicationListener<ServiceEvent> {
+import java.util.function.Function;
+
+@Component
+public class ServiceListener {
 
     static Logger logger = Logger.getLogger(ServiceListener.class.getName());
 
-    @Override
+    @EventListener
     public void onApplicationEvent(ServiceEvent serviceEvent) {
         String className = serviceEvent.getSource().getClass().getSimpleName();
         switch (className) {
             case "CountryService":
-                switch (serviceEvent.getOperationType()) {
-                    case CREATE:
-                        logger.info(serviceEvent.getSource().getClass().getName() + " operation : " + serviceEvent.getOperationType() + " with  " + serviceEvent.getMeta().toString());
-                        break;
-                    case FIND:
-                        logger.info(serviceEvent.getSource().getClass().getName() + " operation : " + serviceEvent.getOperationType() + " with " + serviceEvent.getMeta().toString());
-                        break;
-                    case FINDALL:
-                        logger.info(serviceEvent.getSource().getClass().getName() + " operation : " + serviceEvent.getOperationType() + " with " + serviceEvent.getMeta().toString());
-                        break;
-                    case DELETE:
-                        logger.info(serviceEvent.getSource().getClass().getName() + " operation : " + serviceEvent.getOperationType() + " with " + serviceEvent.getMeta().toString());
-                        break;
-                    case UPDATE:
-                        logger.info(serviceEvent.getSource().getClass().getName() + " operation : " + serviceEvent.getOperationType() + " with " + serviceEvent.getMeta().toString());
-                        break;
-                }
+                logger.info(logFun.apply(serviceEvent));
                 break;
             case "LocationService":
                 ///.....
 
         }
     }
+
+    private Function<ServiceEvent, String> logFun = serviceEvent -> serviceEvent.getSource().getClass().getName() + " operation : " + serviceEvent.getOperationType() + " with  " + serviceEvent.getMeta().toString();
 }

@@ -1,14 +1,20 @@
-package ua.nure.repository;
+package ua.nure.repository.jpa;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ua.nure.domain.Job;
+import ua.nure.repository.CrudRepository;
+import ua.nure.repository.JobRepository;
 
 import java.util.List;
 
 @Repository
-public class JobRepositoryHibernate implements CrudRepository<Job>{
+@Profile("jpa")
+@Primary
+public class JobRepositoryHibernate implements JobRepository {
 
     @Autowired
     private SessionFactory sessionFactory;

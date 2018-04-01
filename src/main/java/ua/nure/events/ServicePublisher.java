@@ -15,6 +15,6 @@ public class ServicePublisher<T> implements ApplicationEventPublisherAware{
     }
 
     public void publish (T source, ServiceEvent.OperationType operationType, Object meta) {
-        this.applicationEventPublisher.publishEvent(new ServiceEvent(source, operationType, meta));
+        this.applicationEventPublisher.publishEvent(new ServiceEvent<>(source, operationType, meta));
     }
 }

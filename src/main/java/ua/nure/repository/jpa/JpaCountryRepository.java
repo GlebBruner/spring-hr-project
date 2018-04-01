@@ -1,15 +1,21 @@
-package ua.nure.repository;
+package ua.nure.repository.jpa;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ua.nure.domain.Country;
+import ua.nure.repository.CountryRepository;
+import ua.nure.repository.CrudRepository;
 
 import java.util.List;
 
 @Repository
-public class CountryRepositoryHibernate implements CrudRepository<Country> {
+@Profile("jpa")
+@Primary
+public class JpaCountryRepository implements CountryRepository {
 
     @Autowired
     SessionFactory sessionFactory;

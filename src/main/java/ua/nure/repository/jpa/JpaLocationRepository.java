@@ -1,11 +1,15 @@
-package ua.nure.repository;
+package ua.nure.repository.jpa;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ua.nure.domain.Country;
 import ua.nure.domain.Location;
+import ua.nure.repository.CrudRepository;
+import ua.nure.repository.LocationRepository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -13,7 +17,9 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository
-public class LocationRepositoryHibernate implements CrudRepository<Location> {
+@Profile("jpa")
+@Primary
+public class JpaLocationRepository implements LocationRepository {
 
     @Autowired
     private SessionFactory sessionFactory;

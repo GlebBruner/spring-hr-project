@@ -1,14 +1,20 @@
-package ua.nure.repository;
+package ua.nure.repository.jpa;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ua.nure.domain.Department;
+import ua.nure.repository.CrudRepository;
+import ua.nure.repository.DepartmentRepository;
 
 import java.util.List;
 
 @Repository
-public class DepartmentRepositoryHibernate implements CrudRepository<Department> {
+@Profile("jpa")
+@Primary
+public class JpaDepartmentRepository implements DepartmentRepository {
 
     @Autowired
     private SessionFactory sessionFactory;
