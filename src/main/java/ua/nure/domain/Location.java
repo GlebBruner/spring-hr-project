@@ -29,7 +29,7 @@ public class Location implements Serializable {
     @Column(name = "city")
     private String city;
 
-    @OneToOne
+    @OneToOne // default fetch type = EAGER. Load location => load country
     @JoinColumn(unique = true)
     private Country country;
 

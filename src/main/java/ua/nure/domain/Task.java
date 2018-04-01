@@ -29,7 +29,8 @@ public class Task implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(mappedBy = "tasks")
+    @ManyToMany(mappedBy = "tasks", fetch = FetchType.LAZY) // load job - load another tasks - load another jobs - another employees
+    // - departments - locations - countries
     @JsonIgnore
     private Set<Job> jobs = new HashSet<>();
 

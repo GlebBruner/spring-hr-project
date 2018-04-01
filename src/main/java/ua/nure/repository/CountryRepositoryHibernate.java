@@ -1,5 +1,6 @@
 package ua.nure.repository;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -30,12 +31,17 @@ public class CountryRepositoryHibernate implements CrudRepository<Country> {
 
     @Override
     public void delete(Integer id) {
-        Country countryForDelete = sessionFactory.getCurrentSession().get(Country.class, id);
+        /*Country countryForDelete = sessionFactory.getCurrentSession().get(Country.class, id);
         if (countryForDelete != null) {
             sessionFactory.getCurrentSession().delete(countryForDelete);
         } else {
             // how to process?
-        }
+        }*/
+        Session session = sessionFactory.getCurrentSession();
+        String deleteCountryHql = "DELETE FROM country WHERE id = :id";
+        boolean isCountryDeleted = session.createQuery(deleteCountryHql).setParameter("id", id).executeUpdate() > 0;
+
+
     }
 
     @Override

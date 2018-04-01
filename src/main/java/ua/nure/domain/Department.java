@@ -28,11 +28,11 @@ public class Department implements Serializable {
     @Column(name = "department_name", nullable = false)
     private String departmentName;
 
-    @OneToOne
+    @OneToOne // default fetch type. load department => load location => load country
     @JoinColumn(unique = true)
     private Location location;
 
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY) // set to LAZY for example. load department != load all employees
     @JsonIgnore
     private Set<Employee> employees = new HashSet<>();
 

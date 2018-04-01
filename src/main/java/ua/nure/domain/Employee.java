@@ -42,14 +42,14 @@ public class Employee implements Serializable {
     @Column(name = "salary")
     private Long salary;
 
-    @ManyToOne
+    @ManyToOne // default fetch type EAGER. load employee => load department
     private Department department;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee") // EAGER
     @JsonIgnore
     private Set<Job> jobs = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // load employee != load all hierarchy
     private Employee manager;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

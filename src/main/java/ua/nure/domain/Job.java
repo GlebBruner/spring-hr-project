@@ -31,10 +31,10 @@ public class Job implements Serializable {
     @Column(name = "max_salary")
     private Long maxSalary;
 
-    @ManyToOne
+    @ManyToOne // default type - EAGER
     private Employee employee;
 
-    @ManyToMany
+    @ManyToMany // default type - EAGER
     @JoinTable(name = "job_task",
                joinColumns = @JoinColumn(name="jobs_id", referencedColumnName="id"),
                inverseJoinColumns = @JoinColumn(name="tasks_id", referencedColumnName="id"))
