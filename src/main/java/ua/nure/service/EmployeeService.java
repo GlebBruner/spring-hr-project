@@ -2,6 +2,7 @@ package ua.nure.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.nure.domain.Employee;
 import ua.nure.repository.EmployeeRepository;
 import ua.nure.repository.jdbc.EmployeeRepositoryImpl;
@@ -36,6 +37,11 @@ public class EmployeeService {
 
     public void update (Employee employee) {
         this.employeeRepository.update(employee);
+    }
+
+    @Transactional(readOnly = true)
+    public Long getAvgNonManagerSalary() {
+        return this.employeeRepository.getAverageSalary();
     }
 
 }

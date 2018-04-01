@@ -32,7 +32,7 @@ public class JpaCountryRepository implements CountryRepository {
 
     @Override
     public List<Country> findAll() {
-        return sessionFactory.getCurrentSession().createQuery("FROM country").list();
+        return sessionFactory.getCurrentSession().createQuery("FROM Country", Country.class).list();
     }
 
     @Override

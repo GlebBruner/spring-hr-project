@@ -1,6 +1,8 @@
 package ua.nure.repository.jpa;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
@@ -9,6 +11,7 @@ import ua.nure.domain.Employee;
 import ua.nure.repository.CrudRepository;
 import ua.nure.repository.EmployeeRepository;
 
+import javax.persistence.criteria.*;
 import java.util.List;
 
 @Repository
@@ -57,5 +60,17 @@ public class JpaEmployeeRepository implements EmployeeRepository {
             employeeForUpdate.setJobs(employee.getJobs());
             sessionFactory.getCurrentSession().update(employeeForUpdate);
         }
+    }
+
+    @Override
+    public Long getAverageSalary() {
+        CriteriaBuilder builder = sessionFactory.getCurrentSession().getCriteriaBuilder();
+
+        CriteriaQuery<Double> criteriaQuery = builder.createQuery(Double.class);
+        Root<Employee> root = criteriaQuery.from(Employee.class);
+        criteriaQuery.select(builder.avg(root.get("salary"))).where(builder.isNull(root.get("manager")));
+
+        Query<Double> query = sessionFactory.getCurrentSession().createQuery(criteriaQuery);
+        return query.getSingleResult().longValue();
     }
 }

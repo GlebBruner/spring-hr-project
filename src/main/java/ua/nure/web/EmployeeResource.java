@@ -52,4 +52,9 @@ public class EmployeeResource {
         this.employeeService.update(employee);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/employees/salary")
+    public ResponseEntity<Long> getSalary() {
+        return ResponseEntity.ok(this.employeeService.getAvgNonManagerSalary());
+    }
 }

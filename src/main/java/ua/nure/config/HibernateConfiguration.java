@@ -28,7 +28,7 @@ public class HibernateConfiguration  {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setHibernateProperties(hibernateProperties());
-        sessionFactory.setPackagesToScan("ua.nure.model");
+        sessionFactory.setPackagesToScan("ua.nure.domain");
 
         return sessionFactory;
     }

@@ -134,4 +134,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     public BiFunction<ResultSet, Integer, Employee> getEmployeeMapper() {
         return employeeMapper;
     }
+
+    @Override
+    public Long getAverageSalary() {
+        return null;
+    }
 }
