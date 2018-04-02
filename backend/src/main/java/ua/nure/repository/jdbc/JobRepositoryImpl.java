@@ -10,7 +10,6 @@ import org.springframework.jdbc.support.KeyHolder;
 //>>>>>>> departs-employs
 import ua.nure.domain.Job;
 import ua.nure.domain.Task;
-import ua.nure.repository.CrudRepository;
 import ua.nure.repository.JobRepository;
 
 import java.sql.PreparedStatement;

@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ua.nure.domain.Department;
-import ua.nure.repository.CrudRepository;
 import ua.nure.repository.DepartmentRepository;
 
 import java.util.List;

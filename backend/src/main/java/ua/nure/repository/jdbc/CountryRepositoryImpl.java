@@ -1,14 +1,12 @@
 package ua.nure.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ua.nure.domain.Country;
 import ua.nure.repository.CountryRepository;
-import ua.nure.repository.CrudRepository;
 
 import java.sql.PreparedStatement;
 import java.util.List;

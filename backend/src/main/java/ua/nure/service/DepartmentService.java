@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.nure.domain.Department;
 import ua.nure.repository.DepartmentRepository;
-import ua.nure.repository.jdbc.DepartmentRepositoryImpl;
 
 import java.util.List;
 

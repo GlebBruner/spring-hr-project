@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ua.nure.domain.Country;
 import ua.nure.repository.CountryRepository;
-import ua.nure.repository.CrudRepository;
 
 import java.util.List;
 

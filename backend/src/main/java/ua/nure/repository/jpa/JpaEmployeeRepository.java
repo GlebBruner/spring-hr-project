@@ -1,6 +1,5 @@
 package ua.nure.repository.jpa;
 
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ua.nure.domain.Employee;
-import ua.nure.repository.CrudRepository;
 import ua.nure.repository.EmployeeRepository;
 
 import javax.persistence.criteria.*;

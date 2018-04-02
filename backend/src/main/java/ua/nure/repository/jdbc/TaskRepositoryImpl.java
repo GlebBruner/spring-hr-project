@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ua.nure.domain.Job;
 import ua.nure.domain.Task;
-import ua.nure.repository.CrudRepository;
 import ua.nure.repository.TaskRepository;
 
 import java.sql.PreparedStatement;

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.nure.domain.Employee;
 import ua.nure.repository.EmployeeRepository;
-import ua.nure.repository.jdbc.EmployeeRepositoryImpl;
 
 import java.util.List;
 

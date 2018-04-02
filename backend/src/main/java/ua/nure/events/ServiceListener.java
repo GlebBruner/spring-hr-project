@@ -1,7 +1,6 @@
 package ua.nure.events;
 
 import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 

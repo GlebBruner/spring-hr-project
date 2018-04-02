@@ -7,7 +7,6 @@ import ua.nure.domain.Country;
 import ua.nure.events.ServiceEvent;
 import ua.nure.events.ServicePublisher;
 import ua.nure.repository.CountryRepository;
-import ua.nure.repository.jdbc.CountryRepositoryImpl;
 
 import java.util.List;
 

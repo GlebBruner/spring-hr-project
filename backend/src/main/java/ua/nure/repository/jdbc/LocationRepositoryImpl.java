@@ -3,13 +3,11 @@ package ua.nure.repository.jdbc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ua.nure.domain.Country;
 import ua.nure.domain.Location;
-import ua.nure.repository.CrudRepository;
 import ua.nure.repository.LocationRepository;
 
 import java.sql.PreparedStatement;
