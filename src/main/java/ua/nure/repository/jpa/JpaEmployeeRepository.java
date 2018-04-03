@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.nure.domain.Employee;
 import ua.nure.repository.CrudRepository;
 import ua.nure.repository.EmployeeRepository;
@@ -17,6 +18,7 @@ import java.util.List;
 @Repository
 @Profile("jpa")
 @Primary
+@Transactional
 public class JpaEmployeeRepository implements EmployeeRepository {
 
     @Autowired
@@ -28,11 +30,13 @@ public class JpaEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Employee findOne(Integer id) {
         return sessionFactory.getCurrentSession().get(Employee.class, id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Employee> findAll() {
         return sessionFactory.getCurrentSession().createQuery("FROM employee").list();
     }
@@ -72,5 +76,9 @@ public class JpaEmployeeRepository implements EmployeeRepository {
 
         Query<Double> query = sessionFactory.getCurrentSession().createQuery(criteriaQuery);
         return query.getSingleResult().longValue();
+    }
+
+    public static String staticMethodTest() {
+        return "static";
     }
 }

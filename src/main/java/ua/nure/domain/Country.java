@@ -25,6 +25,10 @@ public class Country implements Serializable {
     
     protected Country() {}
 
+    public Country(String countryName){
+        this.countryName = countryName;
+    }
+
     public Country(Long id, String countryName) {
         this.id = id;
         this.countryName = countryName;

@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.nure.domain.Job;
-import ua.nure.repository.CrudRepository;
 import ua.nure.repository.JobRepository;
 
 import java.util.List;
@@ -14,22 +14,26 @@ import java.util.List;
 @Repository
 @Profile("jpa")
 @Primary
+@Transactional
 public class JobRepositoryHibernate implements JobRepository {
 
     @Autowired
     private SessionFactory sessionFactory;
 
     @Override
+
     public Long save(Job job) {
         return (Long)sessionFactory.getCurrentSession().save(job);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Job findOne(Integer id) {
         return sessionFactory.getCurrentSession().get(Job.class, id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Job> findAll() {
         return sessionFactory.getCurrentSession().createQuery("FROM job").list();
     }

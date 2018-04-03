@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.nure.domain.Task;
 import ua.nure.repository.CrudRepository;
 import ua.nure.repository.TaskRepository;
@@ -15,6 +16,7 @@ import java.util.List;
 @Repository
 @Profile("jpa")
 @Primary
+@Transactional
 public class JpaTaskRepository implements TaskRepository {
 
     @Autowired
@@ -26,11 +28,13 @@ public class JpaTaskRepository implements TaskRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Task findOne(Integer id) {
         return sessionFactory.getCurrentSession().get(Task.class, id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Task> findAll() {
         return sessionFactory.getCurrentSession().createQuery("FROM task").list();
     }

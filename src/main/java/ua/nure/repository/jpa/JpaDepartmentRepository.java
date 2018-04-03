@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.nure.domain.Department;
 import ua.nure.repository.CrudRepository;
 import ua.nure.repository.DepartmentRepository;
@@ -14,6 +15,7 @@ import java.util.List;
 @Repository
 @Profile("jpa")
 @Primary
+@Transactional
 public class JpaDepartmentRepository implements DepartmentRepository {
 
     @Autowired
@@ -25,11 +27,13 @@ public class JpaDepartmentRepository implements DepartmentRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Department findOne(Integer id) {
         return sessionFactory.getCurrentSession().get(Department.class, id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Department> findAll() {
         return sessionFactory.getCurrentSession().createQuery("FROM deparment").list(); // or departments...
     }

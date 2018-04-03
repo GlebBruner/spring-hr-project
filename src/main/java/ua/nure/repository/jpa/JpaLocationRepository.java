@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.nure.domain.Country;
 import ua.nure.domain.Location;
 import ua.nure.repository.CrudRepository;
@@ -19,6 +20,7 @@ import java.util.List;
 @Repository
 @Profile("jpa")
 @Primary
+@Transactional
 public class JpaLocationRepository implements LocationRepository {
 
     @Autowired
@@ -31,6 +33,7 @@ public class JpaLocationRepository implements LocationRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Location findOne(Integer id) {
         String selectByIdNativeQuery = "SELECT * FROM location where id = :id";
         Location location = (Location) sessionFactory.getCurrentSession().createNativeQuery(selectByIdNativeQuery)
@@ -42,6 +45,7 @@ public class JpaLocationRepository implements LocationRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Location> findAll() {
         String selectAllNativeQuery = "SELECT * FROM location";
         List<Location> locations = sessionFactory.getCurrentSession().createNativeQuery(selectAllNativeQuery, Location.class).list(); //todo Native
